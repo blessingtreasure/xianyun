@@ -87,12 +87,9 @@ export default {
     },
     // 搜索处理
     handleSearch() {
-      this.$router.push({
-        path: "/post",
-        query: {
-          name: this.searchValue
-        }
-      });
+      const item = this.options[this.currentOption];
+      // 跳转时候给对应的页面url加上搜索内容参数
+      this.$router.push(item.pageUrl + this.searchValue);
     }
   }
 };

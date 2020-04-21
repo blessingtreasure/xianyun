@@ -22,11 +22,8 @@ export default {
     return {
       // 表单数据
       form: {
-        username: "", // 登录用户名/手机
-        password: "", // 登录密码
-        checkPassword: "", // 确认密码
-        nickname: "", // 昵称
-        captcha: "" // 手机验证码
+        username: "13800138000", // 登录用户名/手机
+        password: "123456" // 登录密码
       },
       // 表单规则
       rules: {
@@ -50,7 +47,21 @@ export default {
   methods: {
     // 提交登录
     handleLoginSubmit() {
-      console.log(this.$refs.form.validate);
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          // 把axios 执行的结果返回
+          this.$store.dispatch("user/login", this.form).then(res => {
+            // console.log(res);
+            this.$message.success(
+              "登录成功，欢迎回来" + res.data.user.nickname
+            );
+            this.$router.replace("/");
+          });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     }
   }
 };

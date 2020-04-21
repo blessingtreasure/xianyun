@@ -19,7 +19,7 @@
         <LoginForm v-if="currentTab == 0" />
 
         <!-- 注册功能组件 -->
-        <!-- <RegisterForm v-if="currentTab == 1"/> -->
+        <RegisterForm v-if="currentTab == 1" />
       </div>
     </el-row>
   </div>
@@ -27,9 +27,14 @@
 
 <script>
 import LoginForm from "@/components/user/loginForm.vue";
+import RegisterForm from "@/components/user/RegisterForm.vue";
 export default {
   components: {
-    LoginForm
+    LoginForm,
+    RegisterForm
+  },
+  mounted() {
+    // console.log(this.$store.state);
   },
   data() {
     return {
@@ -43,11 +48,7 @@ export default {
     handleChangeTab(index) {
       this.currentTab = index;
     },
-    handleClick() {
-      const item = this.options[this.currentOption];
-      // 跳转时候给对应的页面url加上搜索内容参数
-      this.$router.push(item.pageUrl + this.searchValue);
-    }
+    handleClick() {}
   }
 };
 </script>
