@@ -70,7 +70,11 @@ export default {
   },
   // 父组件传递过来的值
   props: {
-    data: Object
+    data: {
+      type: Object,
+      // 默认是空对象
+      default: {}
+    }
   },
   computed: {
     difftime() {
@@ -79,13 +83,10 @@ export default {
       start = start[0] * 60 + Number(start[1]);
       // 到达时间
       let end = this.data.arr_time.split(":");
-      console.log(end);
-
       if (end[0] === "00") {
         end[0] = Number(end[0]) + 24;
       }
       end = end[0] * 60 + Number(end[1]);
-      //   console.log(end);
 
       return (
         parseInt((end - start) / 60) + "小时" + ((end - start) % 60) + "分"

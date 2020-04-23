@@ -4,13 +4,13 @@
       <!-- 顶部过滤列表 -->
       <div class="flights-content">
         <!-- 过滤条件 -->
-        <div></div>
+        <flightsFilters :flightsData="dataList" @getfilter="getfilter" />
 
         <!-- 航班头部布局 -->
         <FlightsListHead />
 
         <!-- 航班信息 -->
-        <flightsItem v-for="(item, index) in flights" :key="index" :data="item" />
+        <flightsItem v-for="(item, index) in pageList" :key="index" :data="item" />
         <!-- 分页 -->
         <el-pagination
           background
@@ -36,10 +36,12 @@
 import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import flightsItem from "@/components/air/flightsItem.vue";
+import flightsFilters from "@/components/air/flightsFilters.vue";
 export default {
   components: {
     FlightsListHead,
-    flightsItem
+    flightsItem,
+    flightsFilters
   },
   mounted() {
     //   获取航班信息
@@ -47,37 +49,58 @@ export default {
       url: "/airs",
       params: this.$route.query
     }).then(res => {
-      // 航班总数据
-      this.dataList = res.data.flights;
+      // 航班总数据(里面包含了info,flights,total,options属性)
+      this.dataList = res.data;
+      //  当前页航班列表数据( 因为赋值是引用类型内存地址是一样的所以需要拷贝一份)
+      this.flightsData = { ...res.data };
+      //   总条数
       this.total = res.data.total;
-      // 当前页航班列表数据
-      this.flights = this.dataList.slice(0, 5);
     });
+  },
+  computed: {
+    pageList() {
+      // 起始值
+      const start = (this.pageIndex - 1) * this.pageSize;
+      // 结束值
+      const end = this.pageIndex * this.pageSize;
+      // 当前页航班列表数据
+      return this.flightsData.flights.slice(start, end);
+    }
   },
   data() {
     return {
       // 航班总数据
-      dataList: [],
+      dataList: {
+        info: {},
+        flights: [],
+        options: {
+          company: {}
+        }
+      },
       //   航班列表数据
-      flights: [],
+      flightsData: {
+        flights: []
+      },
       currentPage: 1,
       total: 0,
-      pageSize: 5
+      pageSize: 5,
+      pageIndex: 1
     };
   },
   methods: {
+    //   获取过滤回来的数据
+    getfilter(values) {
+      this.flightsData.flights = values;
+      this.total = values.length;
+    },
     //   切换页面条数
     handleSizeChange(val) {
-      this.flights = this.dataList.slice(0, val);
+      this.pageSize = val;
+      this.pageIndex = 1;
     },
     // 点击跳转到当前页
     handleCurrentChange(val) {
-      // 起始值
-      const start = (val - 1) * this.pageSize;
-      // 结束值
-      const end = val * this.pageSize;
-      // 当前页航班列表数据
-      this.flights = this.dataList.slice(start, end);
+      this.pageIndex = val;
     }
   }
 };

@@ -102,19 +102,9 @@ export default {
   methods: {
     // tab切换时触发
     handleSearchTab(item, index) {},
-
-    // 出发城市输入框获得焦点时触发
-    // value 是选中的值，cb是回调函数，接收要展示的列表
-    queryDepartSearch(value, cb) {
-      if (!value) {
-        this.departCities = [];
-        cb([]);
-        return;
-      }
-
-      // 自定义触发验证
-      this.$refs.form.validateField("departCity");
-      this.$axios({
+    // 封装获取出发城市函数
+    getDeparCity(value) {
+      return this.$axios({
         url: "/airs/city",
         method: "get",
         params: {
@@ -126,8 +116,23 @@ export default {
           item.value = item.name.replace("市", "");
           return item;
         });
-        cb(newdata);
+        return newdata;
+      });
+    },
+    // 出发城市输入框获得焦点时触发
+    // value 是选中的值，cb是回调函数，接收要展示的列表
+    queryDepartSearch(value, cb) {
+      if (!value) {
+        cb([]);
+        this.departCities = [];
+        return;
+      }
+
+      // 自定义触发验证
+      this.$refs.form.validateField("departCity");
+      this.getDeparCity(value).then(newdata => {
         this.departCities = newdata;
+        cb(newdata);
       });
     },
 
@@ -142,14 +147,8 @@ export default {
         this.form.departCode = this.departCities[0].sort;
       }
     },
-
-    // 目标城市输入框获得焦点时触发
-    // value 是选中的值，cb是回调函数，接收要展示的列表
-    queryDestSearch(value, cb) {
-      if (!value) return;
-      // 自定义触发验证
-      this.$refs.form.validateField("destCity");
-      this.$axios({
+    getDestCity(value) {
+      return this.$axios({
         url: "/airs/city",
         method: "get",
         params: {
@@ -161,8 +160,22 @@ export default {
           item.value = item.name.replace("市", "");
           return item;
         });
-        cb(newdata);
+        return newdata;
+      });
+    },
+    // 目标城市输入框获得焦点时触发
+    // value 是选中的值，cb是回调函数，接收要展示的列表
+    queryDestSearch(value, cb) {
+      if (!value) {
+        cb([]);
+        this.destCity = [];
+        return;
+      }
+      // 自定义触发验证
+      this.$refs.form.validateField("destCity");
+      this.getDestCity(value).then(newdata => {
         this.destCity = newdata;
+        cb(newdata);
       });
     },
 
@@ -194,6 +207,8 @@ export default {
     // 提交表单是触发
     handleSubmit() {
       this.$refs.form.validate(valid => {
+        console.log(this.form);
+
         if (valid) {
           // 路由跳转，path指定的路径，query属性指定的问号后面的参数
           // 如果是动态参数就使用params
