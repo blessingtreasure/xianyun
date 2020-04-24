@@ -52,7 +52,7 @@
       筛选：
       <el-button type="primary" round plain size="mini" @click="handleFiltersCancel">撤销</el-button>
     </div>
-    <!-- 实现computed 过滤函数，并设置隐藏 -->
+    <!-- 设置空标签，实现computed 过滤函数，并设置隐藏 -->
     <div v-show="false">{{myfilters}}</div>
   </div>
 </template>
@@ -156,24 +156,15 @@ export default {
       this.$emit("getfilter", arr);
     },
 
-    // // 选择航空公司时候触发
-    // handleCompany(value) {
-    //   const arr = this.flightsData.flights.filter(item => {
-    //     return item.airline_name === value;
-    //   });
-    //   this.$emit("getfilter", arr);
-    // },
-
-    // // 选择机型时候触发
-    // handleAirSize(value) {
-    //   const arr = this.flightsData.flights.filter(item => {
-    //     return item.plane_size === value;
-    //   });
-    //   this.$emit("getfilter", arr);
-    // },
-
     // 撤销条件时候触发
-    handleFiltersCancel() {}
+    handleFiltersCancel() {
+      // 清空筛选条件
+      this.airport = ""; // 机场
+      this.flightTimes = ""; // 出发时间
+      this.company = ""; // 航空公司
+      this.airSize = ""; //飞机尺寸
+      this.$emit("getfilter", this.flightsData.flights);
+    }
   }
 };
 </script>

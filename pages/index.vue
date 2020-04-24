@@ -44,6 +44,8 @@
 <script>
 export default {
   mounted() {
+    console.log(this.$store);
+
     this.$axios({
       url: "/scenics/banners",
       method: "get"

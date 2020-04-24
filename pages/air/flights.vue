@@ -27,6 +27,7 @@
       <!-- 侧边栏 -->
       <div class="aside">
         <!-- 侧边栏组件 -->
+        <FlightsAside />
       </div>
     </el-row>
   </section>
@@ -37,11 +38,13 @@ import moment from "moment";
 import FlightsListHead from "@/components/air/flightsListHead.vue";
 import flightsItem from "@/components/air/flightsItem.vue";
 import flightsFilters from "@/components/air/flightsFilters.vue";
+import FlightsAside from "@/components/air/flightsAside.vue";
 export default {
   components: {
     FlightsListHead,
     flightsItem,
-    flightsFilters
+    flightsFilters,
+    FlightsAside
   },
   mounted() {
     //   获取航班信息
@@ -53,6 +56,7 @@ export default {
       this.dataList = res.data;
       //  当前页航班列表数据( 因为赋值是引用类型内存地址是一样的所以需要拷贝一份)
       this.flightsData = { ...res.data };
+
       //   总条数
       this.total = res.data.total;
     });
