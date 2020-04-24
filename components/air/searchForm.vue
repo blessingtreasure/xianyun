@@ -72,11 +72,11 @@ export default {
       ],
       currentTab: 0,
       form: {
-        departCity: "", // 出发城市
-        departCode: "", // 出发城市的字母代码
-        destCity: "", //到达城市
-        destCode: "", // 到达城市的字母代码
-        departDate: "" // 出发日期
+        departCity: "广州", // 出发城市
+        departCode: "CAN", // 出发城市的字母代码
+        destCity: "上海", //到达城市
+        destCode: "SHA", // 到达城市的字母代码
+        departDate: "2020-04-24" // 出发日期
       },
       //   出发城市下拉列表
       departCities: [],
@@ -207,9 +207,10 @@ export default {
     // 提交表单是触发
     handleSubmit() {
       this.$refs.form.validate(valid => {
-        console.log(this.form);
-
         if (valid) {
+          // 保存搜索的记录到vuex
+          // 使用commit 提交修改state里面的数据
+          this.$store.commit("air/setSearch", this.form);
           // 路由跳转，path指定的路径，query属性指定的问号后面的参数
           // 如果是动态参数就使用params
           this.$router.push({

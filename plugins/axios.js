@@ -14,6 +14,10 @@ export default (nuxt) => {
       Message.warning({
         message
       });
+      // 如果是403状态，说明没有登录
+    }
+    if (statusCode === 403) {
+
     }
   })
 

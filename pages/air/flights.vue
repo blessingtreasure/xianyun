@@ -48,19 +48,21 @@ export default {
   },
   mounted() {
     //   获取航班信息
-    this.$axios({
-      url: "/airs",
-      params: this.$route.query
-    }).then(res => {
-      // 航班总数据(里面包含了info,flights,total,options属性)
-      this.dataList = res.data;
-      //  当前页航班列表数据( 因为赋值是引用类型内存地址是一样的所以需要拷贝一份)
-      this.flightsData = { ...res.data };
-
-      //   总条数
-      this.total = res.data.total;
-    });
+    this.rederfilghtsData();
   },
+  // 方法1：组件内的路由守卫
+  beforeRouteUpdate(to, from, next) {
+    // 在当前路由改变，但是该组件被复用时调用
+    // 先跳转，再更新数据
+    next();
+    this.rederfilghtsData();
+  },
+  // 方法2：使用watch 监听，当路由参数变化，执行组件更新
+  // watch: {
+  //   $route() {
+  //     this.rederfilghtsData();
+  //   }
+  // },
   computed: {
     pageList() {
       // 起始值
@@ -92,6 +94,20 @@ export default {
     };
   },
   methods: {
+    rederfilghtsData() {
+      //   获取航班信息
+      this.$axios({
+        url: "/airs",
+        params: this.$route.query
+      }).then(res => {
+        // 航班总数据(里面包含了info,flights,total,options属性)
+        this.dataList = res.data;
+        //  当前页航班列表数据( 因为赋值是引用类型内存地址是一样的所以需要拷贝一份)
+        this.flightsData = { ...res.data };
+        //   总条数
+        this.total = res.data.total;
+      });
+    },
     //   获取过滤回来的数据
     getfilter(values) {
       this.flightsData.flights = values;

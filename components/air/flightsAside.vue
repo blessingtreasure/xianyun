@@ -20,21 +20,44 @@
 
     <div class="history">
       <h5>历史查询</h5>
-      <nuxt-link to="#">
+      <div v-for="(item,index) in $store.state.air.searchList" :key="index">
         <el-row type="flex" justify="space-between" align="middle" class="history-item">
           <div class="air-info">
-            <div class="to-from">广州 - 上海</div>
-            <p>2019-06-16</p>
+            <div class="to-from">{{item.departCity}} - {{item.destCity}}</div>
+            <p>{{item.departDate}}</p>
           </div>
-          <span>选择</span>
+          <span @click="handleSelect(item)">选择</span>
         </el-row>
-      </nuxt-link>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import moment from "moment";
+export default {
+  methods: {
+    handleSelect(item) {
+      const myitem = { ...item };
+      const today = moment().format("YYYY-MM-DD");
+      //  全局替换， 把横杠去掉
+      //   当天的时间(20200424)
+      const todayNumber = today.replace(/-/g, "");
+      //   点击item 的时间(20200430)
+      const departDateNumber = item.departDate.replace(/-/g, "");
+      // 进行比较
+      // 如果item 的时间比当天的时间大，把时间改为今天
+      if (departDateNumber < todayNumber) {
+        myitem.departDate = today;
+      }
+      //   将路由参数修改（当路由参数修改时，触发组件更新，去到filghts页面）
+      this.$router.push({
+        url: "/air/flights",
+        query: myitem
+      });
+    }
+  }
+};
 </script>
 
 <style lang="less" scoped>
