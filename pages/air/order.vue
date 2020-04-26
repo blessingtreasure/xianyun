@@ -7,17 +7,19 @@
       </div>
 
       <!-- 侧边栏 -->
-      <div class="aside"></div>
+      <OrderAside :data="$store.state.air.filghtsData" />
+      <!-- <div class="aside"></div> -->
     </el-row>
   </div>
 </template>
 
 <script>
 import OrderForm from "@/components/air/orderForm";
-
+import OrderAside from "@/components/air/orderAside";
 export default {
   components: {
-    OrderForm
+    OrderForm,
+    OrderAside
   },
   data() {
     return {

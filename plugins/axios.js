@@ -4,6 +4,7 @@ import {
 
 // axios 的响应拦截错误的响应，err.response
 
+
 export default (nuxt) => {
   nuxt.$axios.onError(err => {
     const {
@@ -14,10 +15,14 @@ export default (nuxt) => {
       Message.warning({
         message
       });
+      // 返回上一页
+      this.$router.push("/");
+
       // 如果是403状态，说明没有登录
     }
     if (statusCode === 403) {
-
+      // 跳转到登录页
+      nuxt.redirect("/user/login");
     }
   })
 
