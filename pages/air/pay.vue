@@ -28,18 +28,18 @@
 import QRcode from "qrcode";
 export default {
   mounted() {
-    setTimeout(() => {
+    setTimeout(async () => {
       const id = this.$route.query.id;
       const { token, user } = this.$store.state.user.userInfo;
       // 请求二维码
-      this.$axios({
+      await this.$axios({
         url: `airorders/${id}`,
         headers: {
-          Authorization: `Bearer ` + token
+          Authorization: `Bearer ` + this.$store.state.user.userInfo.token
         }
       }).then(res => {
         const { payInfo } = res.data;
-        console.log(payInfo);
+        this.detail = res.data;
         const canvas = document.querySelector("#qrcode-stage");
         // 第一个参数canvas节点元素
         // 第二个是生成二维码的链接
@@ -47,7 +47,46 @@ export default {
           width: 200
         });
       });
-    }, 10);
+    }, 20);
+    //   轮询获取订单的支付状态
+    this.timer = setInterval(() => {
+      this.$axios({
+        url: "/airorders/checkpay",
+        method: "post",
+        headers: {
+          Authorization: `Bearer ` + this.$store.state.user.userInfo.token
+        },
+        data: {
+          id: this.detail.id, //订单id
+          nonce_str: this.detail.price, //订单金额
+          out_trade_no: this.detail.orderNo //订单编号
+        }
+      }).then(res => {
+        const { statusTxt, trade_state } = res.data;
+        if (trade_state === "SUCCESS") {
+          this.$alert(
+            `<strong> 
+            <i class='iconfont icon-chenggong'  style="color:#57c22d;margin-right:10px"></i>恭喜你，订单支付成功！
+            </strong>`,
+            "订单支付结果",
+            {
+              dangerouslyUseHTMLString: true
+            }
+          );
+          clearInterval(this.timer);
+        }
+      });
+    }, 3000);
+  },
+  data() {
+    return {
+      detail: "",
+      timer: {}
+    };
+  },
+  destroyed() {
+    //   当组件销毁时，清除定时器
+    clearInterval(this.timer);
   }
 };
 </script>

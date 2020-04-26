@@ -62,7 +62,11 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
+  mounted() {
+    this.form.departDate = moment().format();
+  },
   data() {
     return {
       // tab栏
@@ -76,7 +80,7 @@ export default {
         departCode: "CAN", // 出发城市的字母代码
         destCity: "上海", //到达城市
         destCode: "SHA", // 到达城市的字母代码
-        departDate: "2020-04-24" // 出发日期
+        departDate: "" // 出发日期
       },
       //   出发城市下拉列表
       departCities: [],

@@ -10,7 +10,8 @@
         <FlightsListHead />
 
         <!-- 航班信息 -->
-        <flightsItem v-for="(item, index) in pageList" :key="index" :data="item" />
+        <flightsItem v-for="(item, index) in pageList" :key="index" :data="item"/>
+ 
         <!-- 分页 -->
         <el-pagination
           background

@@ -1,67 +1,82 @@
 <template>
-  <div class="flight-item">
-    <div @click="handleShowRecommend">
-      <!-- 显示的机票信息 -->
-      <el-row type="flex" align="middle" class="flight-info">
-        <el-col :span="6">
-          <span>{{data.airline_name}}</span>
-          {{data.flight_no}}
-        </el-col>
-        <el-col :span="12">
-          <el-row type="flex" justify="space-between" class="flight-info-center">
-            <el-col :span="8" class="flight-airport">
-              <strong>{{data.dep_time}}</strong>
-              <span>{{data.org_airport_name}}{{data.org_airport_quay}}</span>
-            </el-col>
-            <el-col :span="8" class="flight-time">
-              <span>{{difftime}}</span>
-            </el-col>
-            <el-col :span="8" class="flight-airport">
-              <strong>{{data.arr_time}}</strong>
-              <span>{{data.dst_airport_name}}{{data.dst_airport_quay}}</span>
-            </el-col>
-          </el-row>
-        </el-col>
-        <el-col :span="6" class="flight-info-right">
-          ￥
-          <span class="sell-price">{{data.seat_infos[0].org_settle_price_child}}</span>起
-        </el-col>
-      </el-row>
-    </div>
-    <div class="flight-recommend" v-if="showRecommend">
-      <!-- 隐藏的座位信息列表 -->
-      <el-row
-        type="flex"
-        justify="space-between"
-        align="middle"
-        v-for="(item,index) in data.seat_infos"
-        :key="index"
-      >
-        <el-col :span="4">低价推荐</el-col>
-        <el-col :span="20">
-          <el-row type="flex" justify="space-between" align="middle" class="flight-sell">
-            <el-col :span="16" class="flight-sell-left">
-              <span>{{item.name}}</span>
-              | {{item.supplierName}}
-            </el-col>
-            <el-col :span="5" class="price">￥{{item.org_settle_price}}</el-col>
-            <el-col :span="3" class="choose-button">
-              <el-button type="warning" size="mini" @click="handleChoose(data.id,item.seat_xid)">选定</el-button>
-              <p>剩余：{{item.discount}}</p>
-            </el-col>
-          </el-row>
-        </el-col>
-      </el-row>
+  <div class="container">
+    <div class="flight-item">
+      <div @click="handleShowRecommend">
+        <!-- 显示的机票信息 -->
+        <el-row type="flex" align="middle" class="flight-info">
+          <el-col :span="6">
+            <span>{{data.airline_name}}</span>
+            {{data.flight_no}}
+          </el-col>
+          <el-col :span="12">
+            <el-row type="flex" justify="space-between" class="flight-info-center">
+              <el-col :span="8" class="flight-airport">
+                <strong>{{data.dep_time}}</strong>
+                <span>{{data.org_airport_name}}{{data.org_airport_quay}}</span>
+              </el-col>
+              <el-col :span="8" class="flight-time">
+                <span>{{difftime}}</span>
+              </el-col>
+              <el-col :span="8" class="flight-airport">
+                <strong>{{data.arr_time}}</strong>
+                <span>{{data.dst_airport_name}}{{data.dst_airport_quay}}</span>
+              </el-col>
+            </el-row>
+          </el-col>
+          <el-col :span="6" class="flight-info-right">
+            ￥
+            <span class="sell-price">{{data.seat_infos[0].org_settle_price_child}}</span>起
+          </el-col>
+        </el-row>
+      </div>
+      <div class="flight-recommend" v-if="showRecommend">
+        <!-- 隐藏的座位信息列表 -->
+        <el-row
+          type="flex"
+          justify="space-between"
+          align="middle"
+          v-for="(item,index) in data.seat_infos"
+          :key="index"
+        >
+          <el-col :span="4">低价推荐</el-col>
+          <el-col :span="20">
+            <el-row type="flex" justify="space-between" align="middle" class="flight-sell">
+              <el-col :span="16" class="flight-sell-left">
+                <span>{{item.name}}</span>
+                | {{item.supplierName}}
+              </el-col>
+              <el-col :span="5" class="price">￥{{item.org_settle_price}}</el-col>
+              <el-col :span="3" class="choose-button">
+                <el-button
+                  type="warning"
+                  size="mini"
+                  @click="handleChoose(data.id,item.seat_xid)"
+                >选定</el-button>
+                <p>剩余：{{item.discount}}</p>
+              </el-col>
+            </el-row>
+          </el-col>
+        </el-row>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  mounted() {},
   data() {
     return {
       showRecommend: false // 列表默认收起
     };
+  },
+  // 父组件传递过来的值
+  props: {
+    data: {
+      type: Object,
+      // 默认是空对象
+      default: {}
+    }
   },
   methods: {
     handleShowRecommend() {
@@ -78,14 +93,7 @@ export default {
       });
     }
   },
-  // 父组件传递过来的值
-  props: {
-    data: {
-      type: Object,
-      // 默认是空对象
-      default: {}
-    }
-  },
+
   computed: {
     difftime() {
       // 起飞时间

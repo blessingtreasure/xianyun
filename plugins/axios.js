@@ -20,7 +20,8 @@ export default (nuxt) => {
 
       // 如果是403状态，说明没有登录
     }
-    if (statusCode === 403) {
+    if (statusCode === 403 || statusCode === 401) {
+      this.$message.error("当前没登录！")
       // 跳转到登录页
       nuxt.redirect("/user/login");
     }

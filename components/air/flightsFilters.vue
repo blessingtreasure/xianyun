@@ -5,7 +5,7 @@
         单程：
         {{flightsData.info.departCity}} - {{flightsData.info.destCity}}
         /
-        {{flightsData.info.departDate}}
+        {{moment(flightsData.info.departDate).format('YYYY-MM-DD')}}
       </el-col>
       <el-col :span="4">
         <el-select size="mini" v-model="airport" placeholder="起飞机场">
@@ -58,6 +58,7 @@
 </template>
 
 <script>
+import moment from "moment";
 export default {
   props: {
     //   接收父组件传递的值
@@ -66,7 +67,9 @@ export default {
       default: {}
     }
   },
-
+  mounted() {
+    console.log(this.flightsData);
+  },
   data() {
     return {
       airport: "", // 机场
@@ -77,7 +80,8 @@ export default {
         { label: "大", value: "L" },
         { label: "中", value: "M" },
         { label: "小", value: "S" }
-      ]
+      ],
+      moment
     };
   },
   computed: {
